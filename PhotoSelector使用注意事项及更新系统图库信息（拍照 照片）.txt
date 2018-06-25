@@ -1,0 +1,34 @@
+
+插入到系统图库并更新信息
+
+	if (isFileExistAndCanRead(fileFullPath)) {
+			// 其次把文件插入到系统图库
+			try {
+
+				MediaStore.Images.Media.insertImage(getApplicationContext()
+						.getContentResolver(), fileFullPath, fileName, null);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			// 最后通知图库更新
+			getApplicationContext().sendBroadcast(
+					new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri
+							.parse("file://" + fileFullPath)));// 实际取值 file：///
+
+			// 如果需要返回到这一页，直接调用一下更新的页面
+			PhotoModel photoModel0 = new PhotoModel(fileFullPath);
+			selected.clear();
+			selected.add(photoModel0);
+			ok();
+		} else {
+			Log.e("test", "文件出错.不可读");
+			selected.clear();
+			ok();
+		}
+
+使用注意事项：
+
+
+(1).注意按照 AndroidManifest.xml;配置一下;(2).然后再项目的Libraries中添加PhotoSelector/libs/universal-image-loader-1.9.3-with-sources.jar,并且在Order and  Export中勾选 ;(3).如果有混淆代码，也要注意是否需要添加库和添加忽略。
+特别注意：(4).在非Activity环境下 调用CommonUtils.launchActivityForResult不能返回数据，就手写Intent 方法,测试可以使用; (5).onActivityResult方法中加上， super.onActivityResult(requestCode, resultCode, data);，(6).尽量删除两个项目中的bin文件或者clean项目。(7).后期也要注意FragmentActivity与Activity的区别
+
