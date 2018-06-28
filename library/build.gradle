@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'  //必须
+group = 'com.jiangjiesheng.photoselector' //可以换成自己的域名 com.github.jiangjiesheng
+
+android {
+    compileSdkVersion 21
+    //compileSdkVersion = targetSdkVersion = 26 ,但是这里为了兼容com.android.support 改成21
+    buildToolsVersion "26.0.2" //必须
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+buildscript {
+    repositories { //根目录下的 allprojects
+        // 如果有新的库引入,尽量把慢的放在后面
+        // 前4个推荐的 jitpack.io
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        google()
+
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+
+        maven { url 'https://repo1.maven.org/maven2/' }
+
+        maven { url "https://jitpack.io" }
+
+        jcenter { url "http://jcenter.bintray.com/" }
+
+        maven { url 'http://repo.jfrog.org/artifactory/gradle-plugins' }
+
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots" }
+
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/central/' }
+
+//        如果有新的库引入,尽量把慢的放在后面
+    }
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath 'com.android.tools.build:gradle:1.5.0' //1.5.0这个很关键 上传到jitpack.io 就用这个版本 其他版本都是失败
+    }
+}
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3' //要排除 jar中v4 必须 否则 资源xml中找不到命名空间
+    // implementation fileTree(dir: 'libs', include: ['*.jar'])
+    provided files('libs/universal-image-loader-1.9.3-with-sources.jar')
+}
